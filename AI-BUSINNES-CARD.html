@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ψηφιακή Κάρτα - Ιωάννης Βελούδος</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .business-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-section {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-image {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin: 0 auto 15px;
+            background-color: #e0e0e0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .name {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .company {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .title {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .contact-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+
+        .contact-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .save-contact-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .save-contact-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .save-contact-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .chat-section {
+            padding: 20px;
+        }
+
+        .chat-container {
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: 12px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .bot .message-content {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-top-left-radius: 5px;
+        }
+
+        .user .message-content {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border-top-right-radius: 5px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        #user-input:focus {
+            border-color: #1e3c72;
+        }
+
+        #send-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        #send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .quick-btn {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 8px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-btn:hover {
+            background: #f0f0f0;
+            border-color: #1e3c72;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px 15px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: inline-block;
+        }
+
+        .typing-dots::after {
+            content: '';
+            animation: typing 1.5s infinite;
+        }
+
+        @keyframes typing {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        .info-section {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+        }
+
+        .contact-details {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .contact-item i {
+            color: #1e3c72;
+            width: 20px;
+        }
+
+        .location {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+
+        .save-instructions {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 8px;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1e3c72;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="business-card">
+        <div class="profile-section">
+            <div class="profile-image" id="profile-img">
+                <img src="http://veloudos.eu/wp-content/uploads/2025/05/VELOUDOS-IOANNIS.jpg" 
+                     alt="Ιωάννης Βελούδος" 
+                     onload="hideSpinner()"
+                     onerror="handleImageError()">
+                <div class="loading-spinner" id="image-spinner"></div>
+            </div>
+            <h1 class="name">Ιωάννης Βελούδος</h1>
+            <p class="company">IQ LIFE</p>
+            <p class="title">Key Account Manager & Executive Communications Consultant</p>
+            
+            <div class="contact-info">
+                <a href="tel:+302106858190" class="contact-btn" title="Κάλεσέ με">
+                    <i class="fas fa-phone"></i>
+                </a>
+                <a href="https://wa.me/306936984720" class="contact-btn" title="WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="mailto:iveloudos@dousiscom.gr" class="contact-btn" title="Στείλε μου Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="#" class="contact-btn" title="LinkedIn" onclick="showMessage('Σύντομα θα είμαστε συνδεδεμένοι και στο LinkedIn!')">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+
+            <!-- Save Contact Section -->
+            <div class="save-contact-section">
+                <button class="save-contact-btn" onclick="saveToContacts()">
+                    <i class="fas fa-address-book"></i>
+                    Αποθήκευση Επαφής στο Κινητό
+                </button>
+                <div class="save-instructions">
+                    Κάντε κλικ για να αποθηκεύσετε τα στοιχεία επικοινωνίας στις επαφές σας
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <div class="contact-details">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <span>210 685 8190</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>693 698 4720</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>iveloudos@dousiscom.gr</span>
+                </div>
+                <div class="location">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Π. Μπακογιάννη 34, Μεταμόρφωση 144 51</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-section">
+            <div class="chat-container" id="chat-container">
+                <div class="message bot">
+                    <div class="message-content">
+                        Καλησπέρα! Είμαι ο ψηφιακός βοηθός του Ιωάννη Βελούδου. 🎯<br><br>
+                        Είμαι εδώ για να σας βοηθήσω με πληροφορίες σχετικά με:<br>
+                        • Υπηρεσίες Key Account Management<br>
+                        • Επαγγελματικές Επικοινωνίες & PR<br>
+                        • Συνεργασίες με την IQ LIFE<br><br>
+                        Πώς μπορώ να σας βοηθήσω σήμερα;
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typing-indicator">
+                Ο Ιωάννης σας απαντά<span class="typing-dots"></span>
+            </div>
+            
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Πληκτρολογήστε το μήνυμά σας εδώ...">
+                <button id="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="quick-btn" data-question="Ποιες είναι οι υπηρεσίες σας στην IQ LIFE;">Υπηρεσίες IQ LIFE</div>
+                <div class="quick-btn" data-question="Τι περιλαμβάνει η Executive Communications;">Executive Communications</div>
+                <div class="quick-btn" data-question="Πώς μπορώ να συνεργαστώ μαζί σας;">Συνεργασία</div>
+                <div class="quick-btn" data-question="Προγραμματισμός συνάντησης">Ραντεβού</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chat-container');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const typingIndicator = document.getElementById('typing-indicator');
+            const quickBtns = document.querySelectorAll('.quick-btn');
+            const imageSpinner = document.getElementById('image-spinner');
+            
+            // Show spinner while image loads
+            imageSpinner.style.display = 'block';
+            
+            // Βάση γνώσεων για τον Ιωάννη Βελούδο
+            const knowledgeBase = {
+                "default": "Ενδιαφέρον ερώτηση! Ως Key Account Manager και Executive Communications Consultant, μπορώ να σας βοηθήσω με στρατηγικές επικοινωνίας, διαχείριση λογαριασμών και δημιουργία επαγγελματικών σχέσεων. Τι ακριβώς σας ενδιαφέρει;",
+                
+                "υπηρεσίες iq life": "Στην IQ LIFE, ως Key Account Manager, διαχειρίζομαι στρατηγικούς λογαριασμούς και αναπτύσσω σχέσεις με πελάτες. Οι κύριες υπηρεσίες μας περιλαμβάνουν:\n\n• Στρατηγική διαχείριση λογαριασμών\n• Ανάπτυξη επιχειρηματικών σχέσεων\n• Επέκταση δικτύου συνεργατών\n• Προσαρμοσμένες λύσεις για πελάτες\n\nΘα σας ενδιέφερε συγκεκριμένη πληροφορία;",
+                
+                "executive communications": "Ως Executive Communications & PR Consultant, προσφέρω:\n\n• Στρατηγική επικοινωνία για ηγέτες\n• Διαχείριση φήμης (Reputation Management)\n• Προετοιμασία για ομιλίες και συνεντεύξεις\n• PR campaigns και media relations\n• Κρίση επικοινωνίας\n\nΑυτές οι υπηρεσίες βοηθούν τους ηγέτες να επικοινωνούν αποτελεσματικά και να χτίζουν ισχυρή φήμη.",
+                
+                "συνεργασία": "Για συνεργασία, μπορούμε να:\n\n1. Προγραμματίσουμε μια πρώτη συνάντηση\n2. Συζητήσουμε τις ανάγκες σας\n3. Αναπτύξουμε μια προσαρμοσμένη προσέγγιση\n\nΜπορείτε να με καλέσετε στο 210 685 8190 ή να μου στείλετε email στο iveloudos@dousiscom.gr για να κανονίσουμε μια συνάντηση.",
+                
+                "ραντεβού": "Εξαιρετική ιδέα! Μπορείτε να:\n\n• Καλέσετε απευθείας: 210 685 8190\n• Στείλετε WhatsApp: 693 698 4720\n• Email: iveloudos@dousiscom.gr\n\nΣυνήθως είμαι διαθέσιμος για meetings Δευτέρα-Παρασκευή 9:00-17:00. Προτείνω να κανονίσουμε μια τηλεφωνική ή online συνάντηση ως πρώτο βήμα.",
+                
+                "διεύθυνση": "Το γραφείο μου βρίσκεται στη:\n\nΠ. Μπακογιάννη 34\nΜεταμόρφωση 144 51\n\nΕίναι εύκολα προσβάσιμο με μέσα μεταφοράς και υπάρχει parking στην περιοχή. Σας συνιστώ να κανονίσετε την επίσκεψη εκ των προτέρων.",
+                
+                "iq life": "Η IQ LIFE είναι μια δυναμική εταιρεία που ειδικεύεται σε λύσεις business development και account management. Ως Key Account Manager, εστιάζω στην:\n\n• Ανάπτυξη μακροπρόθεσμων σχέσεων με πελάτες\n• Επέκταση της παρουσίας της εταιρείας\n• Στρατηγική συνεργασία με βασικούς πελάτες\n\nΗ ομάδα μας συνδυάζει εμπειρία και καινοτομία για βιώσιμες λύσεις.",
+                
+                "αποθήκευση": "Μπορείτε να αποθηκεύσετε τα στοιχεία επικοινωνίας μου απευθείας στο κινητό σας! Κάντε κλικ στο κουμπί 'Αποθήκευση Επαφής' στο πάνω μέρος της σελίδας. Θα κατέβει ένα αρχείο VCF που μπορείτε να ανοίξετε και να αποθηκεύσετε στις επαφές σας.",
+                
+                "γεια": "Γεια σας! Χαίρομαι που σας γνωρίζω! Είμαι ο ψηφιακός βοηθός του Ιωάννη Βελούδου. Πώς μπορώ να σας βοηθήσω σήμερα;",
+                
+                "ευχαριστώ": "Παρακαλώ! Χαίρομαι που μπορούσα να βοηθήσω. Αν έχετε άλλες ερωτήσεις για τις υπηρεσίες του Ιωάννη ή θέλετε να κανονίσετε μια συνάντηση, είμαι εδώ! 😊\n\nΜπορείτε επίσης να επικοινωνήσετε απευθείας μαζί του στο 210 685 8190."
+            };
+            
+            // Image loading functions
+            function hideSpinner() {
+                imageSpinner.style.display = 'none';
+            }
+            
+            function handleImageError() {
+                imageSpinner.style.display = 'none';
+                const profileImg = document.querySelector('.profile-image img');
+                profileImg.style.display = 'none';
+                // Show fallback text or icon
+                const profileDiv = document.getElementById('profile-img');
+                profileDiv.innerHTML = '<i class="fas fa-user" style="font-size: 50px; color: #1e3c72; margin-top: 25px;"></i>';
+            }
+            
+            // Αποστολή μηνύματος
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message === '') return;
+                
+                // Προσθήκη μηνύματος χρήστη
+                addMessage(message, 'user');
+                userInput.value = '';
+                
+                // Προσομοίωση typing
+                showTypingIndicator();
+                
+                // Προσομοίωση καθυστέρησης απάντησης AI
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    generateAIResponse(message);
+                }, 1500);
+            }
+            
+            // Προσθήκη μηνύματος στο chat
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = text;
+                
+                messageDiv.appendChild(contentDiv);
+                chatContainer.appendChild(messageDiv);
+                
+                // Αυτόματο scroll στο τελευταίο μήνυμα
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            // Εμφάνιση typing indicator
+            function showTypingIndicator() {
+                typingIndicator.style.display = 'block';
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+            
+            // Απόκρυψη typing indicator
+            function hideTypingIndicator() {
+                typingIndicator.style.display = 'none';
+            }
+            
+            // Δημιουργία AI απάντησης
+            function generateAIResponse(userMessage) {
+                const lowerMessage = userMessage.toLowerCase();
+                let response = knowledgeBase.default;
+                
+                // Έλεγχος για keywords
+                for (const [keyword, aiResponse] of Object.entries(knowledgeBase)) {
+                    if (lowerMessage.includes(keyword) && keyword !== "default") {
+                        response = aiResponse;
+                        break;
+                    }
+                    
+                    // Έλεγχος για συνώνυμα και παραλλαγές
+                    const synonyms = {
+                        "υπηρεσίες": ["υπηρεσία", "service", "services"],
+                        "συνεργασία": ["συνεργασία", "cooperation", "collaboration"],
+                        "ραντεβού": ["ραντεβού", "meeting", "appointment", "συνάντηση"],
+                        "διεύθυνση": ["διεύθυνση", "address", "location", "τοποθεσία"],
+                        "αποθήκευση": ["αποθήκευση", "αποθηκεύσετε", "save", "contact", "επαφή"]
+                    };
+                    
+                    for (const [key, syns] of Object.entries(synonyms)) {
+                        if (syns.some(syn => lowerMessage.includes(syn))) {
+                            response = knowledgeBase[key] || knowledgeBase.default;
+                            break;
+                        }
+                    }
+                }
+                
+                addMessage(response, 'bot');
+            }
+            
+            // Βοηθητική συνάρτηση για μηνύματα
+            function showMessage(message) {
+                addMessage(message, 'bot');
+            }
+
+            // Συνάρτηση αποθήκευσης επαφής
+            function saveToContacts() {
+                // Δημιουργία vCard content
+                const vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN;CHARSET=UTF-8:Ιωάννης Βελούδος
+ORG;CHARSET=UTF-8:IQ LIFE
+TITLE;CHARSET=UTF-8:Key Account Manager & Executive Communications Consultant
+TEL;TYPE=WORK,VOICE:2106858190
+TEL;TYPE=CELL,VOICE:6936984720
+TEL;TYPE=CELL,WHATSAPP:6936984720
+EMAIL;TYPE=WORK:iveloudos@dousiscom.gr
+ADR;TYPE=WORK;CHARSET=UTF-8:;;Π. Μπακογιάννη 34;Μεταμόρφωση;;14451;Ελλάδα
+URL:https://www.iqlife.gr
+NOTE;CHARSET=UTF-8:Key Account Manager - Executive Communications & PR Consultant
+PHOTO;VALUE=URI;TYPE=JPEG:http://veloudos.eu/wp-content/uploads/2025/05/VELOUDOS-IOANNIS.jpg
+END:VCARD`;
+
+                // Δημιουργία Blob και download
+                const blob = new Blob([vCardData], { type: 'text/vcard' });
+                const url = window.URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'Ιωάννης Βελούδος.vcf';
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                // Cleanup
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                // Εμφάνιση μηνύματος επιβεβαίωσης
+                showMessage("✅ Τα στοιχεία επικοινωνίας αποθηκεύτηκαν! Ανοίξτε το αρχείο '.vcf' που κατεβάσατε για να προστεθεί στις επαφές σας. Σε iOS ανοίγει αυτόματα, σε Android ενδέχεται να χρειαστεί να το ανοίξετε με την εφαρμογή Επαφών.");
+            }
+            
+            // Event listeners
+            sendBtn.addEventListener('click', sendMessage);
+            
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Quick buttons
+            quickBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    userInput.value = question;
+                    sendMessage();
+                });
+            });
+            
+            // Προσαρμογή προφίλ
+            const profileData = {
+                name: "Ιωάννης Βελούδος",
+                company: "IQ LIFE",
+                title: "Key Account Manager & Executive Communications Consultant"
+            };
+            
+            // Ενημέρωση των στοιχείων
+            document.getElementById('profile-name').textContent = profileData.name;
+            document.querySelector('.company').textContent = profileData.company;
+            document.querySelector('.title').textContent = profileData.title;
+        });
+    </script>
+</body>
+</html>
